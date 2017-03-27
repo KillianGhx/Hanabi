@@ -1,0 +1,92 @@
+Save_score_lvl1_3J_5C : sans seed
+
+Nombre de partie : 200
+Moyenne : 1.32
+Max : 7
+Min : 0
+
+Save_score_lvl1_3J_4C : i = 0 ; i <= 200 ;
+
+Nombre de partie : 200
+Moyenne : 1.33333
+Max : 7
+Min : 0
+
+Save_score_lvl1_3J_3C : i = 200 ; i <= 400 ;
+
+Nombre de partie : 200
+Moyenne : 1.22886
+Max : 5
+Min : 0
+
+Save_score_lvl1_2J_3C : i = 400 ; i <= 600 ;
+
+Nombre de partie : 201
+Moyenne : 1.17413
+Max : 6
+Min : 0
+
+Save_score_lvl1_2J_4C : i = 600 ; i <= 800 ;
+
+Nombre de partie : 202
+Moyenne : 1.29851
+Max : 8
+Min : 0
+
+Save_score_lvl1_2J_5C : i = 800 ; i <= 1000 ;
+
+Moyenne : 1.14925
+Max : 6
+Min : 0
+
+Save_score_lvl1_4J_3C : i = 1000 ; i <= 1200 ;
+
+Nombre de partie : 202
+Moyenne : 1.20398
+Max : 6
+Min : 0
+
+Save_score_lvl1_4J_4C : i = 1200 ; i <= 1400 ;
+
+Nombre de partie : 202
+Moyenne : 1.40796
+Max : 6
+Min : 0
+
+Save_score_lvl1_4J_5C : i = 1400 ; i <= 1600 ;
+
+Nombre de partie : 202
+Moyenne : 1.07463
+Max : 8
+Min : 0
+
+Save_score_lvl1_5J_3C : i = 2000 ; i <= 2200 ;
+
+Nombre de partie : 202
+Moyenne : 1.26866
+Max : 5
+Min : 0
+
+Save_score_lvl1_5J_4C : i = 1800 ; i <= 2000 ;
+
+Nombre de partie : 202
+Moyenne : 1.41791
+Max : 8
+Min : 0
+
+Save_score_lvl1_5J_5C : i = 1600 ; i <= 1800 ;
+
+Nombre de partie : 202
+Moyenne : 1.21891
+Max : 7
+Min : 0
+
+
+
+
+
+
+
+
+
+

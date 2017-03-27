@@ -1,0 +1,80 @@
+case 4: {
+				// Cheat Jouer carte
+
+				vector<Carte> lol = plateau.alltop();
+				vector<Carte>::iterator itman;
+				vector<Carte>::iterator itman2;
+				int compteur = 0;
+				for (itman = lol.begin(); itman != lol.end(); itman++) {
+					compteur = 0;
+					for (itman2 = it->main.begin(); itman2 != it->main.end();
+							itman2++) {
+						if (itman->getColor() == itman2->getColor()
+								&& itman->getNumero() + 1
+										== itman2->getNumero()) {
+							cout << "Carte numero : " << compteur
+									<< " jouable !" << endl;
+						}
+						compteur++;
+					}
+				}
+
+				cout << endl;
+				it--;
+			}
+				break;
+
+			case 5: { // Cheat Defausse
+				vector<Carte> lel = plateau.defausse;
+				vector<Carte> lil = plateau.alltop();
+				Couleur c("blanc");
+				Carte n(c, 0);
+				lel.push_back(n);
+				vector<Carte>::iterator itman;
+				vector<Carte>::iterator itman2;
+				int compteur = 0;
+				for (itman = it->main.begin(); itman != it->main.end();
+						itman++) {
+					for (itman2 = lil.begin(); itman2 != lil.end(); itman2++) { // défile all tops
+						if (itman->getColor() == itman2->getColor()
+								&& itman->getNumero() <= itman2->getNumero()) { //Si la carte a ete deja joué
+							cout << "Carte numero : " << compteur
+									<< " defaussable !" << endl;
+
+						}
+						break;
+					}
+					for (itman2 = lel.begin(); itman2 != lel.end(); itman2++) { // Défile la defausse
+						if (!(itman->getColor() == itman2->getColor()
+								&& itman->getNumero() == itman2->getNumero())) {
+							if (itman->getNumero() != 5) {
+								cout << "Carte numero : " << compteur
+										<< " defaussable !" << endl;
+
+							}
+
+						}
+						break;
+					}
+
+					compteur++;
+				}
+				it--;
+
+			}
+				break;
+				
+				
+				
+//	Game g = Game(4,5,0,false,true); //(nb joueurs, nb cartes, seed, save, ia)
+
+//	for(int i = 0; i<=100; i++){
+//		cout << "seed = " << i << endl;
+//		 g = Game(2,4,i,false);
+//		cout<<"Partie "<<i<<" fini !!!!!!!!!!!!!"<<endl;
+//	}
+
+//	char *path="/home/ubuntu/git/Hanabi2/Hanabilocal/sauvegarde/IA_LVL3/savescore1_lvl3.txt";
+//	Calcule c(path);
+//	c.afficherInfo();
+				

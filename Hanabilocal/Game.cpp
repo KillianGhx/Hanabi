@@ -66,10 +66,10 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	nombre_joueur = nb_joueur;
 	plateau = Plateau(seed);
 
-	//Créations des variables utilisés
-	int num_carte; // Celle qui va etre joué
+	//Crï¿½ations des variables utilisï¿½s
+	int num_carte; // Celle qui va etre jouï¿½
 	int choix = 0;
-	int countBeforeEnd = joueurs.size() - 1; // Décompte lorsque que la pioche est vide
+	int countBeforeEnd = joueurs.size() - 1; // Dï¿½compte lorsque que la pioche est vide
 	vector<Joueur>::iterator it;
 	vector<Joueur>::iterator it2;
 	for (it = joueurs.begin(); it != joueurs.end(); it++) {
@@ -77,7 +77,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	} // Distribution des cartes pour chaque joueurs
 
 	while (plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
-			&& countBeforeEnd > 0) { //Boucle while pour le déroulement de la partie
+			&& countBeforeEnd > 0) { //Boucle while pour le dï¿½roulement de la partie
 
 		for (it = joueurs.begin(); it != joueurs.end(); it++) { // Boucle pour chaque joueurs
 			plateau.affiche2D();
@@ -186,3 +186,4 @@ void Game::afficherJoueur() {
 		it->afficher();
 	}
 }
+

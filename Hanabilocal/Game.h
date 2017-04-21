@@ -23,6 +23,19 @@ public :
 	void defausser();
 	void poser();
 	void afficherJoueur();
+	vector<int> gameState();
+
+	list<int> toBool(int n){
+		list<int> v;
+		while(n != 0){
+			if(n%2 == 0){
+				v.push_front(0);
+			}
+			else v.push_front(1);
+			n=n/2;
+		}
+		return v;
+	}
 
 
 

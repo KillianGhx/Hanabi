@@ -11,23 +11,17 @@
 #include <string>
 #include <iomanip>
 #include "Calcule.h"
-#include "Reseau.h"
 #include <math.h>
-#include "Fonction.h"
 
 using namespace std;
 
 
-
-
-void afficheliste (vector<double> liste){
-
-}
-
 int main() {
-
-	Fonction f;
-	f.reseaupeutposer1();
+	list<int> v;
+	v = toBool(8);
+	for(int n : v){
+		cout << n;
+	}
 
 
 

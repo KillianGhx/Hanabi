@@ -14,6 +14,37 @@
 
 using namespace std;
 
+vector<int> listToVector(list<int> liste){
+	vector<int> res;
+	list<int>::iterator it;
+	for (it = liste.begin();it != liste.end();it++){
+		res.push_back(*it);
+	}
+	return res;
+}
+
+vector<int> toBool(int n){
+	list<int> v;
+	while(n != 0){
+		if(n%2 == 0){
+			v.push_front(0);
+		}
+		else v.push_front(1);
+		n=n/2;
+	}
+	return listToVector(v);
+}
+
+vector<int> carteToBool(Carte c){
+	vector<int> res;
+	vector<int> tmp;
+	res=toBool(c.getColor().toInt());
+	tmp=toBool(c.getNumero());
+	res.insert(res.end(),tmp.begin(),tmp.end());
+	return res;
+
+}
+
 class Plateau{
 private :
 	int JetonRouge;
@@ -27,9 +58,11 @@ private :
 	stack<Carte> bleus;
 
 
+
 public :
 	Deck paquet;
 	vector<Carte> defausse;
+
 
 	void poser(Carte c);
 	Carte piocher();
@@ -43,7 +76,7 @@ public :
 	int calculpoint();
 	void afficheDefausse();
 	void defausser(Carte c);
-
+	vector<int> getState();
 
 
 	void setJetonRouge(int jetonRouge = 3) {

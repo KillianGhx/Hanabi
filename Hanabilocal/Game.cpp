@@ -187,3 +187,16 @@ void Game::afficherJoueur() {
 	}
 }
 
+vector<int> Game::gameState(int indexJoueur){
+
+	vector<int> res;
+	res = this->plateau.getState();
+	vector<Carte>::iterator it;
+	vector<int> tmp;
+	for (it = joueurs[indexJoueur].getMain().begin();it != joueurs[indexJoueur].getMain().end(); it++){
+		tmp=carteToBool(*it);
+		res.insert(res.begin(),tmp.begin(),tmp.end());
+	}
+	return res;
+
+}

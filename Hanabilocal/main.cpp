@@ -17,11 +17,6 @@ using namespace std;
 
 
 int main() {
-	list<int> v;
-	v = toBool(8);
-	for(int n : v){
-		cout << n;
-	}
 
 
 

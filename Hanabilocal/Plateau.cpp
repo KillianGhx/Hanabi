@@ -159,3 +159,40 @@ void Plateau::afficheDefausse(){
 		return tops;
 	}
 
+
+
+	vector<int> Plateau::getState(){
+
+		vector<int> res;
+		vector<int> tmp;
+		//ajout du nombre de jeton
+		tmp=toBool(this->getJetonRouge());
+		res=tmp;
+
+		//ajout du score
+		tmp=toBool(this->calculpoint());
+		res.insert(res.end(),tmp.begin(),tmp.end());
+
+		//ajout des feu posé sur le plateau
+		vector<Carte>::iterator it;
+		vector<Carte> feu;
+		feu=this->alltop();
+		for (it = feu.begin(); it != feu.end();it ++){
+			tmp = carteToBool(*it);
+			res.insert(res.end(),tmp.begin(),tmp.end());
+		}
+
+		//ajout des cartes de la defausse
+		for (it = defausse.begin();it != defausse.end();it ++){
+			tmp = carteToBool(*it);
+			res.insert(res.end(),tmp.begin(),tmp.end());
+		}
+
+		//ajout du nombres de cartes contenus dans la defausse
+		tmp = toBool(paquet.taille());
+		res.insert(res.end(),tmp.begin(),tmp.end());
+
+		//retourne le vector symbolisant l'etat du plateau
+		return res;
+
+	}

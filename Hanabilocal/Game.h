@@ -24,9 +24,6 @@ public :
 	void poser();
 	void afficherJoueur();
 	vector<int> gameState(int index);
-
-
-
 };
 
 

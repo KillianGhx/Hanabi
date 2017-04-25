@@ -2,6 +2,36 @@
 #include <iostream>
 using namespace std;
 
+vector<int> listToVector(list<int> liste){
+	vector<int> res;
+	list<int>::iterator it;
+	for (it = liste.begin();it != liste.end();it++){
+		res.push_back(*it);
+	}
+	return res;
+}
+
+vector<int> toBool(int n){
+	list<int> v;
+	while(n != 0){
+		if(n%2 == 0){
+			v.push_front(0);
+		}
+		else v.push_front(1);
+		n=n/2;
+	}
+	return listToVector(v);
+}
+
+vector<int> carteToBool(Carte c){
+	vector<int> res;
+	vector<int> tmp;
+	res=toBool(c.getColor().toInt());
+	tmp=toBool(c.getNumero());
+	res.insert(res.end(),tmp.begin(),tmp.end());
+	return res;
+}
+
 Plateau::Plateau(){
 	bleus.push(Carte(Couleur("bleu"),0));
 	jaunes.push(Carte(Couleur("jaune"),0));
@@ -150,7 +180,9 @@ void Plateau::afficheDefausse(){
 	}
 
 	vector<Carte> Plateau::alltop(){
-		vector<Carte> tops = vector <Carte>();
+		vector<Carte> tops ;
+		vector<Carte>::iterator it;
+
 		tops.push_back(bleus.top());
 		tops.push_back(jaunes.top());
 		tops.push_back(rouges.top());
@@ -158,6 +190,20 @@ void Plateau::afficheDefausse(){
 		tops.push_back(blancs.top());
 		return tops;
 	}
+
+	vector<double> Plateau::resumedefausse(){
+		vector<double> res;
+		for (int i = 0;i<25;i++){
+			res.push_back(0);
+		}
+		vector<Carte>::iterator it;
+		for (it = defausse.begin();it != defausse.end();it++){
+			res[it->getColor().toInt()*5+it->getNumero()]++;
+		}
+		return res;
+	}
+
+
 
 
 
@@ -183,12 +229,14 @@ void Plateau::afficheDefausse(){
 		}
 
 		//ajout des cartes de la defausse
-		for (it = defausse.begin();it != defausse.end();it ++){
-			tmp = carteToBool(*it);
+		vector<double> defausse = resumedefausse();
+		vector<double>::iterator it2;
+		for (it2 = defausse.begin();it2 != defausse.end();it2++){
+			tmp = toBool(*it2);
 			res.insert(res.end(),tmp.begin(),tmp.end());
 		}
 
-		//ajout du nombres de cartes contenus dans la defausse
+		//ajout du nombres de cartes contenus dans le paquet
 		tmp = toBool(paquet.taille());
 		res.insert(res.end(),tmp.begin(),tmp.end());
 

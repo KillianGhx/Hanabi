@@ -66,7 +66,6 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	nbcartesmain = nombrecarte;
 	nombre_joueur = nb_joueur;
 	plateau = Plateau(seed);
-	gameState(1);
 
 	//Cr�ations des variables utilis�s
 	int num_carte; // Celle qui va etre jou�
@@ -209,7 +208,7 @@ vector<int> Game::gameState(int indexJoueur){
 	}
 
 	// pour toutes les carte de la main du joueur on ajoute si elle sont jouable ou defaussable
-	for (it = joueurs[indexJoueur].getMain().begin();it != joueurs[indexJoueur].getMain().end(); it++){
+	for (it = joueurs[indexJoueur].main.begin();it != joueurs[indexJoueur].main.end(); it++){
 
 		tmp=carteToBool((*it));
 		res.insert(res.begin(),tmp.begin(),tmp.end());

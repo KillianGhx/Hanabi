@@ -161,6 +161,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 			plateau.fini();
 
 		}
+		gameState(1);
 	}
 
 	cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
@@ -186,54 +187,67 @@ void Game::afficherJoueur() {
 	}
 }
 
+void afficheCarte(Carte c){
+	cout << "carte : " ;
+	cout << c.getColor().getString() << "  " << c.getNumero() << endl;
+}
+
+
 vector<int> Game::gameState(int indexJoueur){
 
 	vector<int> res;
 	res = this->plateau.getState();
 	vector<Carte>::iterator it;
-	vector<int>::iterator it2;
+	vector<double>::iterator it2;
+	vector<int>::iterator itres;
 	vector<int> tmp;
-	vector<Carte> valuedesfeux = this->plateau.alltop();
-	vector<int> FeuValue;
-	vector<Carte>::iterator itTop;
+	vector<double> valuedesfeux = this->plateau.getFeu();
 	vector<double> carteDouble;
 	vector<double> carteDefausse = plateau.resumedefausse();
-	cout << "test1" << endl;
+	vector<Carte>::iterator itCarte;
+	vector<double> resumedefausse = plateau.resumedefausse();
+	vector<double> v;
+
 
 
 	//on enregistre la valeur des feux dans une liste de double pour correcponde aux fonctions de test
-	for(itTop = valuedesfeux.begin();itTop != valuedesfeux.end();itTop++){
-		FeuValue.push_back(it->getColor().toInt());
-		FeuValue.push_back(it->getNumero());
+	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
+		tmp = toBool(*it2,3);
+		res.insert(res.end(),tmp.begin(),tmp.end());
 	}
 
-	// pour toutes les carte de la main du joueur on ajoute si elle sont jouable ou defaussable
-	for (it = joueurs[indexJoueur].main.begin();it != joueurs[indexJoueur].main.end(); it++){
+	// On enregistre toute les cartes des mains des joueurs si les jeurs n'ont pas assez de carte on les remplace pas 0
+	for(itCarte = joueurs[indexJoueur].main.begin();itCarte != joueurs[indexJoueur].main.end();itCarte++){
+		tmp = carteToBool(*itCarte);
+		res.insert(res.end(),tmp.begin(),tmp.end());
 
-		tmp=carteToBool((*it));
-		res.insert(res.begin(),tmp.begin(),tmp.end());
 
-		//rajoute si la carte est jouable ou morte
+		//On insere dans la gamestate si les cartes sont jouable/morte/defaussable
+		afficheCarte(*itCarte);
 		carteDouble.clear();
-		carteDouble.push_back(it->getColor().toInt());
-		carteDouble.push_back(it->getNumero());
-		carteDouble.insert(carteDouble.end(),FeuValue.begin(),FeuValue.end());
+		carteDouble.push_back(itCarte->getNumero());
+		carteDouble.push_back(itCarte->getColor().toInt());
+		carteDouble.insert(carteDouble.end(),valuedesfeux.begin(),valuedesfeux.end());
+		cout << "posable :" << peutPoser2(carteDouble) << endl;
 		res.push_back(peutPoser2(carteDouble));
+		cout << "morte :" << dispensable(carteDouble) << endl;
 		res.push_back(dispensable(carteDouble));
 
-		//ajout si la carte est dispensable
 		carteDouble.clear();
-		carteDouble.push_back(it->getColor().toInt());
-		carteDouble.push_back(it->getNumero());
-		carteDouble.insert(carteDouble.end(),carteDefausse.begin(),carteDefausse.end());
-		res.push_back(dispensable(carteDouble));
+		carteDouble.push_back(itCarte->getNumero());
+		carteDouble.push_back(itCarte->getColor().toInt());
+		carteDouble.insert(carteDouble.end(),resumedefausse.begin(),resumedefausse.end());
+		res.push_back(defaussable(carteDouble));
+
 
 	}
+
+
 	cout << "affichage de la gamestate : "  << endl;
-	for (it2 = res.begin();it2 != res.end();it2++){
-
+	for (itres = res.begin();itres != res.end();itres++){
+		cout << *itres ;
 	}
-
+	cout << endl ;
 	return res;
 
 }

@@ -16,7 +16,7 @@
 using namespace std;
 
 vector<int> listToVector(list<int> liste);
-vector<int> toBool(int n);
+vector<int> toBool(int n,int nbBits);
 vector<int> carteToBool(Carte c);
 
 class Plateau{
@@ -52,7 +52,7 @@ public :
 	void defausser(Carte c);
 	vector<int> getState();
 	vector<double> resumedefausse();
-
+	vector<double> getFeu();
 
 	void setJetonRouge(int jetonRouge = 3) {
 		JetonRouge = jetonRouge;

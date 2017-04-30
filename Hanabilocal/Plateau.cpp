@@ -11,8 +11,10 @@ vector<int> listToVector(list<int> liste){
 	return res;
 }
 
-vector<int> toBool(int n){
+vector<int> toBool(int n,int nbBits){
 	list<int> v;
+	list<int>::iterator it ;
+//	cout << "nombre : "  << n <<endl;
 	while(n != 0){
 		if(n%2 == 0){
 			v.push_front(0);
@@ -20,14 +22,22 @@ vector<int> toBool(int n){
 		else v.push_front(1);
 		n=n/2;
 	}
+	for (unsigned i = v.size(); i <nbBits; i++){
+		v.push_front(0);
+	}
+//	cout << "resultat : ";
+//	for (it = v.begin(); it != v.end(); it++){
+//		cout << *it << " " ;
+//	}
+
 	return listToVector(v);
 }
 
 vector<int> carteToBool(Carte c){
 	vector<int> res;
 	vector<int> tmp;
-	res=toBool(c.getColor().toInt());
-	tmp=toBool(c.getNumero());
+	res=toBool(c.getColor().toInt(),3);
+	tmp=toBool(c.getNumero(),3);
 	res.insert(res.end(),tmp.begin(),tmp.end());
 	return res;
 }
@@ -211,12 +221,14 @@ void Plateau::afficheDefausse(){
 
 		vector<int> res;
 		vector<int> tmp;
+		vector<int>::iterator itres;
 		//ajout du nombre de jeton
-		tmp=toBool(this->getJetonRouge());
-		res=tmp;
+		tmp=toBool(this->getJetonRouge(),2);
+		res.insert(res.end(),tmp.begin(),tmp.end());
+
 
 		//ajout du score
-		tmp=toBool(this->calculpoint());
+		tmp=toBool(this->calculpoint(),5);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
 		//ajout des feu posé sur le plateau
@@ -231,16 +243,35 @@ void Plateau::afficheDefausse(){
 		//ajout des cartes de la defausse
 		vector<double> defausse = resumedefausse();
 		vector<double>::iterator it2;
+		int index =0;
 		for (it2 = defausse.begin();it2 != defausse.end();it2++){
-			tmp = toBool(*it2);
+			if(index % 5 == 4){
+			tmp = toBool(*it2,1);
+			}
+			else tmp = toBool(*it2,2);
 			res.insert(res.end(),tmp.begin(),tmp.end());
+			index++;
 		}
 
 		//ajout du nombres de cartes contenus dans le paquet
-		tmp = toBool(paquet.taille());
+		tmp = toBool(paquet.taille(),6);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
+//		cout << "affichage du res" << endl;
+//		for (itres = res.begin(); itres != res.end();itres++){
+//			cout << *itres << "  ";
+//		}
 		//retourne le vector symbolisant l'etat du plateau
 		return res;
 
+	}
+
+	vector<double> Plateau::getFeu(){
+		vector<double> res;
+		res.push_back(bleus.top().getNumero());
+		res.push_back(jaunes.top().getNumero());
+		res.push_back(rouges.top().getNumero());
+		res.push_back(verts.top().getNumero());
+		res.push_back(blancs.top().getNumero());
+		return res;
 	}

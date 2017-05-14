@@ -205,7 +205,6 @@ vector<double> conversion(vector<int> v){
 vector<double> Game::gameState(int indexJoueur,int compteurFin){
 
 	vector<int> res;
-	res = this->plateau.getState();
 	vector<Carte>::iterator it;
 	vector<double>::iterator it2;
 	vector<int>::iterator itres;
@@ -218,20 +217,23 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 	vector<double> v;
 
 
+	// dans un premier temps on enregistre les données du plateau dans res
+	res = this->plateau.getState();
 
 	//on enregistre la valeur des feux dans une liste de double pour correcponde aux fonctions de test
 	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
+		// on insert la valeur des feux sur 3 bits 5 feux * 3 bits 15 bits
 		tmp = toBool(*it2,3);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 	}
 
-	// On enregistre toute les cartes des mains des joueurs si les jeurs n'ont pas assez de carte on les remplace pas 0
+	// On enregistre toute les cartes des mains des joueurs (sur 6 bits)
 	for(itCarte = joueurs[indexJoueur].main.begin();itCarte != joueurs[indexJoueur].main.end();itCarte++){
 		tmp = carteToBool(*itCarte);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
 
-		//On insere dans la gamestate si les cartes sont jouable/morte/defaussable
+		//On insere dans la gamestate si les cartes sont jouable/morte/defaussable (3 bits par cartes)
 		afficheCarte(*itCarte);
 		carteDouble.clear();
 		carteDouble.push_back(itCarte->getNumero());
@@ -248,13 +250,13 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 		carteDouble.insert(carteDouble.end(),resumedefausse.begin(),resumedefausse.end());
 		res.push_back(defaussable(carteDouble));
 
-		//On insert les cartes de la defausse
+		//On insert les cartes de la defausse sur 25 bits
 		for (itres = carteDefausse.begin();itres != carteDefausse.end();itres++){
 			res.push_back(*itres);
 		}
 
 	}
-
+	//on enregistre le nombre de tours restant sur 6bits
 	vector<int> nbTourRestant = toBool(this->plateau.sizePaquet()+compteurFin,6);
 	res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
 

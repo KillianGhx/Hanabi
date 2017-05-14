@@ -237,12 +237,12 @@ void Plateau::afficheDefausse(){
 		vector<int> res;
 		vector<int> tmp;
 		vector<int>::iterator itres;
-		//ajout du nombre de jeton
+		//ajout du nombre de jeton (sur 2 bits)
 		tmp=toBool(this->getJetonRouge(),2);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
 
-		//ajout du score
+		//ajout du score (sur 5 bits)
 		tmp=toBool(this->calculpoint(),5);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
@@ -256,19 +256,19 @@ void Plateau::afficheDefausse(){
 		}
 
 		//ajout des cartes de la defausse
-		vector<double> defausse = resumedefausse();
-		vector<double>::iterator it2;
-		int index =0;
-		for (it2 = defausse.begin();it2 != defausse.end();it2++){
-			if(index % 5 == 4){
-			tmp = toBool(*it2,1);
-			}
-			else tmp = toBool(*it2,2);
-			res.insert(res.end(),tmp.begin(),tmp.end());
-			index++;
-		}
+//		vector<double> defausse = resumedefausse();
+//		vector<double>::iterator it2;
+//		int index =0;
+//		for (it2 = defausse.begin();it2 != defausse.end();it2++){
+//			if(index % 5 == 4){
+//			tmp = toBool(*it2,1);
+//			}
+//			else tmp = toBool(*it2,2);
+//			res.insert(res.end(),tmp.begin(),tmp.end());
+//			index++;
+//		}
 
-		//ajout du nombres de cartes contenus dans le paquet
+		//ajout du nombres de cartes contenus dans le paquet (sur 6 bits)
 		tmp = toBool(paquet.taille(),6);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 

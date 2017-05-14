@@ -23,7 +23,7 @@ public :
 	void defausser();
 	void poser();
 	void afficherJoueur();
-	vector<int> gameState(int index);
+	vector<double> gameState(int index,int compteur);
 };
 
 

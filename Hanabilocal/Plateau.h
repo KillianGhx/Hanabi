@@ -53,6 +53,11 @@ public :
 	vector<int> getState();
 	vector<double> resumedefausse();
 	vector<double> getFeu();
+	vector<int> resumeDefausse2();
+
+	int sizePaquet(){
+		return paquet.taille();
+	}
 
 	void setJetonRouge(int jetonRouge = 3) {
 		JetonRouge = jetonRouge;
@@ -128,6 +133,8 @@ public :
 	void setVerts(const stack<Carte>& verts) {
 		this->verts = verts;
 	}
+
+
 };
 
 

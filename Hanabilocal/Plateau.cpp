@@ -213,6 +213,21 @@ void Plateau::afficheDefausse(){
 		return res;
 	}
 
+	vector<int> Plateau::resumeDefausse2(){
+		vector<double> defausse;
+		vector<int> res;
+		defausse = this->resumedefausse();
+		for (int i = 0;i != defausse.size();i++){
+			if(i%5 == 0 && defausse[i] >= 3) res.push_back(1);
+			else if((i%5 == 1 || i%5 == 2 || i%5 == 3 ) && defausse[i] >= 2) res.push_back(1);
+			else if(i%5 == 4 && defausse[i] >= 1) res.push_back(1);
+			else res.push_back(1);
+
+		}
+
+		return res;
+	}
+
 
 
 

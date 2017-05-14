@@ -161,7 +161,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 			plateau.fini();
 
 		}
-		gameState(1);
+		gameState(1,countBeforeEnd);
 	}
 
 	cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
@@ -192,8 +192,17 @@ void afficheCarte(Carte c){
 	cout << c.getColor().getString() << "  " << c.getNumero() << endl;
 }
 
+vector<double> conversion(vector<int> v){
+	vector<int>::iterator it;
+	vector<double> res;
+	for (it = v.begin();it != v.end();it++){
+		res.push_back(*it);
+	}
+	return res;
+}
 
-vector<int> Game::gameState(int indexJoueur){
+
+vector<double> Game::gameState(int indexJoueur,int compteurFin){
 
 	vector<int> res;
 	res = this->plateau.getState();
@@ -203,7 +212,7 @@ vector<int> Game::gameState(int indexJoueur){
 	vector<int> tmp;
 	vector<double> valuedesfeux = this->plateau.getFeu();
 	vector<double> carteDouble;
-	vector<double> carteDefausse = plateau.resumedefausse();
+	vector<int> carteDefausse = plateau.resumeDefausse2();
 	vector<Carte>::iterator itCarte;
 	vector<double> resumedefausse = plateau.resumedefausse();
 	vector<double> v;
@@ -239,8 +248,15 @@ vector<int> Game::gameState(int indexJoueur){
 		carteDouble.insert(carteDouble.end(),resumedefausse.begin(),resumedefausse.end());
 		res.push_back(defaussable(carteDouble));
 
+		//On insert les cartes de la defausse
+		for (itres = carteDefausse.begin();itres != carteDefausse.end();itres++){
+			res.push_back(*itres);
+		}
 
 	}
+
+	vector<int> nbTourRestant = toBool(this->plateau.sizePaquet()+compteurFin,6);
+	res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
 
 
 	cout << "affichage de la gamestate : "  << endl;
@@ -248,6 +264,6 @@ vector<int> Game::gameState(int indexJoueur){
 		cout << *itres ;
 	}
 	cout << endl ;
-	return res;
+	return conversion(res);
 
 }

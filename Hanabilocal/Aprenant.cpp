@@ -6,6 +6,10 @@
  */
 #include "Aprenant.h"
 
+Aprenant::Aprenant(){
+
+}
+
 Aprenant::Aprenant(vector<int> v){
 	res = Reseau(v);
 }

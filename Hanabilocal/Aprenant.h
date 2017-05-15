@@ -5,6 +5,7 @@
  *      Author: ubuntu
  */
 #include "Reseau.h"
+#include "Game.h"
 #ifndef HANABILOCAL_APRENANT_H_
 #define HANABILOCAL_APRENANT_H_
 
@@ -12,8 +13,9 @@ class Aprenant{
 private :
 	Reseau res;
 public :
+	Aprenant();
 	Aprenant(vector<int>);
-	~Aprenant();
+	~Aprenant(){};
 	double enAvant(vector<double> entrer);
 
 	//apprentissage sur une partie enregistrer en binaire

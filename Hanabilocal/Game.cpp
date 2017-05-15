@@ -23,7 +23,17 @@ Game::Game() {
 
 }
 
+Game::Game(const Game &g){
+	this->nombre_joueur=g.nombre_joueur;
+	this->joueurs=g.joueurs;
+	this->nbcartesmain=g.nbcartesmain;
+	this->plateau=g.plateau;
+}
+
 Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
+
+	//sauvegarde de la partis pour l'apprenant
+	vector<vector<double>> saugegarde;
 
 	//Initialisation des 5 joueurs
 	vector<Carte> mainDeLouis;
@@ -161,7 +171,6 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 			plateau.fini();
 
 		}
-		gameState(1,countBeforeEnd);
 	}
 
 	cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
@@ -201,6 +210,11 @@ vector<double> conversion(vector<int> v){
 	return res;
 }
 
+vector<vector<double>> nextGameState(){
+	vector<vector<double>> next;
+	return next;
+}
+
 
 vector<double> Game::gameState(int indexJoueur,int compteurFin){
 
@@ -221,11 +235,11 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 	res = this->plateau.getState();
 
 	//on enregistre la valeur des feux dans une liste de double pour correcponde aux fonctions de test
-	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
-		// on insert la valeur des feux sur 3 bits 5 feux * 3 bits 15 bits
-		tmp = toBool(*it2,3);
-		res.insert(res.end(),tmp.begin(),tmp.end());
-	}
+//	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
+//		// on insert la valeur des feux sur 3 bits 5 feux * 3 bits 15 bits
+//		tmp = toBool(*it2,3);
+//		res.insert(res.end(),tmp.begin(),tmp.end());
+//	}
 
 	// On enregistre toute les cartes des mains des joueurs (sur 6 bits)
 	for(itCarte = joueurs[indexJoueur].main.begin();itCarte != joueurs[indexJoueur].main.end();itCarte++){
@@ -236,8 +250,8 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 		//On insere dans la gamestate si les cartes sont jouable/morte/defaussable (3 bits par cartes)
 		afficheCarte(*itCarte);
 		carteDouble.clear();
-		carteDouble.push_back(itCarte->getNumero());
 		carteDouble.push_back(itCarte->getColor().toInt());
+		carteDouble.push_back(itCarte->getNumero());
 		carteDouble.insert(carteDouble.end(),valuedesfeux.begin(),valuedesfeux.end());
 		cout << "posable :" << peutPoser2(carteDouble) << endl;
 		res.push_back(peutPoser2(carteDouble));
@@ -250,22 +264,74 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 		carteDouble.insert(carteDouble.end(),resumedefausse.begin(),resumedefausse.end());
 		res.push_back(defaussable(carteDouble));
 
-		//On insert les cartes de la defausse sur 25 bits
-		for (itres = carteDefausse.begin();itres != carteDefausse.end();itres++){
-			res.push_back(*itres);
-		}
-
 	}
+
+	if (this->joueurs[indexJoueur].main.size()<nbcartesmain){
+		for (int i = 0;i<9;i++){
+			res.push_back(0);
+		}
+	}
+
+	//On insert les cartes de la defausse sur 25 bits
+	for (itres = carteDefausse.begin();itres != carteDefausse.end();itres++){
+		res.push_back(*itres);
+	}
+
 	//on enregistre le nombre de tours restant sur 6bits
 	vector<int> nbTourRestant = toBool(this->plateau.sizePaquet()+compteurFin,6);
 	res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
 
 
-	cout << "affichage de la gamestate : "  << endl;
-	for (itres = res.begin();itres != res.end();itres++){
-		cout << *itres ;
+//	cout << "affichage de la gamestate : "  << endl;
+//	for (itres = res.begin();itres != res.end();itres++){
+//		cout << *itres ;
+//	}
+
+	int i = 0;
+	cout << "nombre de jetons : " << endl;
+	for (i = 0;i<2;i++){
+		cout << res[i];
+	}
+	cout << endl;
+	cout << "score actuel : " <<endl;
+	for ( ; i< 7 ; i++){
+		cout << res[i];
 	}
 	cout << endl ;
+	int c = 0;
+	cout << "valeur des feus" << endl;
+	for (; i< 22 ; i++){
+		c++;
+		cout << res[i];
+		if (c%3 == 0) cout << " ";
+	}
+
+	cout << endl << "nombre de cartes du paquet" << endl;
+	for (;i<28;i++){
+		cout << res[i];
+	}
+	cout << endl << "affichage des cartes de la main" << endl;
+	c=0;
+	for (;i < 28 + 9*nbcartesmain;i++){
+		cout << res[i];
+		c++;
+		if (c%3 == 0) cout << " ";
+		if (c%9 == 0) cout << endl;
+	}
+	cout << endl;
+
+	cout << "affichage de la defausse : " << endl;
+	for(;i < 28 + 9*nbcartesmain +25;i++){
+		cout << res[i];
+	}
+	cout << endl;
+	cout << "affichage du nombre de tour restant" << endl;
+	for (;i<28 + 9*nbcartesmain+31;i++){
+		cout << res[i] ;
+	}
+	cout << endl;
+
 	return conversion(res);
+
 
 }

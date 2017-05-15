@@ -13,11 +13,12 @@
 class Game{
 private:
 	Plateau plateau;
-	vector<Joueur> joueurs;
 	int nombre_joueur;
+	vector<Joueur> joueurs;
 	int nbcartesmain;
 public :
 	Game();
+	Game(const Game & g);
 	Game(int nb_joueur,int nbcartes,int seed, bool save, bool ia);
 	Carte piocher();
 	void defausser();

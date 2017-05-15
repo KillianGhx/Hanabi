@@ -221,7 +221,7 @@ void Plateau::afficheDefausse(){
 			if(i%5 == 0 && defausse[i] >= 3) res.push_back(1);
 			else if((i%5 == 1 || i%5 == 2 || i%5 == 3 ) && defausse[i] >= 2) res.push_back(1);
 			else if(i%5 == 4 && defausse[i] >= 1) res.push_back(1);
-			else res.push_back(1);
+			else res.push_back(0);
 
 		}
 
@@ -251,7 +251,7 @@ void Plateau::afficheDefausse(){
 		vector<Carte> feu;
 		feu=this->alltop();
 		for (it = feu.begin(); it != feu.end();it ++){
-			tmp = carteToBool(*it);
+			tmp = toBool(it->getNumero(),3);
 			res.insert(res.end(),tmp.begin(),tmp.end());
 		}
 

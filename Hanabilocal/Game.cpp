@@ -20,10 +20,14 @@ Game::Game() {
 		joueurs.push_back(Joueur(i));
 	}
 	plateau = Plateau();
+	this->compteurFin = this->nombre_joueur;
+	this->indexJoueurCourant =0;
 
 }
 
 Game::Game(const Game &g){
+	this->compteurFin=g.compteurFin;
+	this->indexJoueurCourant=g.indexJoueurCourant;
 	this->nombre_joueur=g.nombre_joueur;
 	this->joueurs=g.joueurs;
 	this->nbcartesmain=g.nbcartesmain;
@@ -31,6 +35,10 @@ Game::Game(const Game &g){
 }
 
 Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
+
+
+	this->compteurFin = this->nombre_joueur;
+	this->indexJoueurCourant =0;
 
 	//sauvegarde de la partis pour l'apprenant
 	vector<vector<double>> saugegarde;
@@ -80,14 +88,16 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	//Cr�ations des variables utilis�s
 	int num_carte; // Celle qui va etre jou�
 	int choix = 0;
-	int countBeforeEnd = joueurs.size() - 1; // D�compte lorsque que la pioche est vide
+	int compteurFin = joueurs.size() - 1; // D�compte lorsque que la pioche est vide
 	vector<Joueur>::iterator it;
 	vector<Joueur>::iterator it2;
+	indexJoueurCourant=-1;
 	for (it = joueurs.begin(); it != joueurs.end(); it++) {
+		indexJoueurCourant++;
 		it->main = plateau.distribution(nombrecarte);
 	} // Distribution des cartes pour chaque joueurs
 	while (plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
-			&& countBeforeEnd > 0) { //Boucle while pour le d�roulement de la partie
+			&& compteurFin > 0) { //Boucle while pour le d�roulement de la partie
 
 		for (it = joueurs.begin(); it != joueurs.end(); it++) { // Boucle pour chaque joueurs
 			plateau.affiche2D();
@@ -102,12 +112,14 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 						<< endl;
 				if (it->isIsIa()) { // Si IA
 					//choix = it->IArandomchose(); // IA LVL1
-					if(it->peutJouer(this->plateau)){
-						choix = 1;
-					}
-					else {
-						choix = 2;
-					}
+					vector<double> gs;
+					gs  = gameState();
+//					if(it->peutJouer(this->plateau)){
+//						choix = 1;
+//					}
+//					else {
+//						choix = 2;
+//					}
 					cout << "Choix de l'IA : " << choix << endl;
 				} else { // Si pas d'IA
 					cin >> choix;
@@ -132,7 +144,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 				if (plateau.paquet.taille() != 0)
 					it->main.push_back(plateau.piocher());
 				else
-					countBeforeEnd--;
+					compteurFin--;
 				break;
 
 			case 2: // Defausser une carte
@@ -154,7 +166,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 				if (plateau.paquet.taille() != 0)
 					it->main.push_back(plateau.piocher());
 				else
-					countBeforeEnd--;
+					compteurFin--;
 				break;
 
 			case 3: //Affiche defausse
@@ -164,9 +176,10 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 
 			}
 			if (!(plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
-					&& countBeforeEnd > 0)) { // SI LE JEU SE TERMINE AVANT LA FIN DE LA BOUCLE FOR QUI PARCOURT TOUT LES JOUEURS
+					&& compteurFin > 0)) { // SI LE JEU SE TERMINE AVANT LA FIN DE LA BOUCLE FOR QUI PARCOURT TOUT LES JOUEURS
 				break;
 			}
+			gameState();
 			choix = 0;
 			plateau.fini();
 
@@ -210,13 +223,41 @@ vector<double> conversion(vector<int> v){
 	return res;
 }
 
-vector<vector<double>> nextGameState(){
+vector<vector<double>> Game::nextGameState(){
 	vector<vector<double>> next;
+	Game g;
+	for (int action = 1;action<3;action++){
+		for( int carte = 0;carte<nbcartesmain;carte++){
+			g=Game(*this);
+			g.jouerCoup(action,carte,this->indexJoueurCourant);
+			next.push_back(g.gameState());
+		}
+	}
 	return next;
 }
 
+void Game::jouerCoup(int action,int indexCarte,int indexJoueur){
 
-vector<double> Game::gameState(int indexJoueur,int compteurFin){
+	if(action == 1){
+		plateau.poser(joueurs[indexJoueur].main[indexCarte]);
+		joueurs[indexJoueur].jeterCarte(indexCarte);
+		if(plateau.sizePaquet()> 0){
+			joueurs[indexJoueur].main[indexCarte]=piocher();
+		}
+	}
+	else {
+		joueurs[indexJoueur].jeterCarte(indexCarte);
+		joueurs[indexJoueur].jeterCarte(indexCarte);
+		if(plateau.sizePaquet()> 0){
+			joueurs[indexJoueur].main[indexCarte]=piocher();
+		}
+	}
+
+
+}
+
+// Creation de la gameState representant l'etat du jeu en binaire
+vector<double> Game::gameState(){
 
 	vector<int> res;
 	vector<Carte>::iterator it;
@@ -242,7 +283,7 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 //	}
 
 	// On enregistre toute les cartes des mains des joueurs (sur 6 bits)
-	for(itCarte = joueurs[indexJoueur].main.begin();itCarte != joueurs[indexJoueur].main.end();itCarte++){
+	for(itCarte = joueurs[this->indexJoueurCourant].main.begin();itCarte != joueurs[this->indexJoueurCourant].main.end();itCarte++){
 		tmp = carteToBool(*itCarte);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
@@ -266,7 +307,7 @@ vector<double> Game::gameState(int indexJoueur,int compteurFin){
 
 	}
 
-	if (this->joueurs[indexJoueur].main.size()<nbcartesmain){
+	if (this->joueurs[this->indexJoueurCourant].main.size()<nbcartesmain){
 		for (int i = 0;i<9;i++){
 			res.push_back(0);
 		}

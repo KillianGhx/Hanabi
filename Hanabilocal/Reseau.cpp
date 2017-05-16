@@ -9,6 +9,9 @@
 #include <ctime>
 #include <random>
 #include <cstdlib>
+#include<fstream>
+#include <string>
+#include <iomanip>
 #include <math.h>
 
 using namespace std;
@@ -354,3 +357,37 @@ double Reseau::backprop(vector <double> in, double target){
 	return erreur;
 }
 
+vector <double> Reseau::getPoids(){
+	vector <double> pds;
+	for(int i = 0; i < (NBCOUCHE-1); i++){
+		for(int j=0;j<(taille[i+1]*taille[i])+(taille[i]); j++){
+			pds.push_back(this->poids[i][j]);
+		}
+	}
+
+	return pds;
+
+}
+
+void Reseau::savePoidsDansTxt(string chemin){
+	vector <double> t;
+	t=this->getPoids();
+	vector <double>::iterator it;
+	ofstream fichier(chemin, ios::in);
+	for(it = t.begin(); it != t.end(); it++){
+		fichier << (*it) << endl;
+	}
+	fichier.close();
+}
+
+vector <double> Reseau::PoidsTxtDansVector(string chemin){
+	vector <double> d;
+	double stock;
+	ifstream fichierLect ("C:/Users/louis/git/Hanabi3/Hanabilocal/sauvegarde/Autre/poids.txt");
+	do{
+		fichierLect >> stock ;
+		d.push_back(stock);
+	}while(!fichierLect.eof());
+
+	return d;
+}

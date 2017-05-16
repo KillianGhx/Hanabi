@@ -9,12 +9,14 @@
 #define RESEAU_H_
 #define NBCOUCHE 4
 #include <vector>
+#include <string>
 #define BORNESUP 1
 #define BORNEINF -1
 #define MAX 60
 #define PAS  0.1
 #define SEED 1
 using namespace std;
+
 
 
 class Reseau{
@@ -46,7 +48,10 @@ public :
 	double getSortie(){
 		return out[0][0];
 	}
+	vector <double> getPoids();
 
+	void savePoidsDansTxt(string chemin);
+	vector <double> PoidsTxtDansVector(string chemin);
 
 	template<class T> T abs(T nbr) {
 	    if(nbr >= 0) return nbr;

@@ -7,29 +7,29 @@
 #include "Aprenant.h"
 
 Aprenant::Aprenant(){
-
+	res = new Reseau({1,80,100});
 }
 
 Aprenant::Aprenant(vector<int> v){
-	res = Reseau(v);
+	res = new Reseau(v);
 }
 
 void Aprenant::learn(vector<vector<double>> partie,int score){
 	vector<vector<double>>::iterator it;
 	for (it =  partie.begin();it != partie.end();it++){
-		res.backprop(*it,res.sigmoide(score));
+		res->backprop(*it,res->sigmoide(score));
 	}
 
 }
 
 double Aprenant::enAvant(vector<double> gameState){
-	res.input(gameState);
-	res.transfert();
-	return res.getSortie();
+	res->input(gameState);
+	res->transfert();
+	return res->getSortie();
 }
 
-vector<int> Aprenant::previsionCoup(Game g){
-			vector<vector<double>> nextGS = g.nextGameState();
+vector<int> Aprenant::previsionCoup(Game *g){
+			vector<vector<double>> nextGS = g->nextGameState();
 			vector<vector<double>>::iterator it;
 			vector<int> out;
 			double max = -100000000;
@@ -37,8 +37,8 @@ vector<int> Aprenant::previsionCoup(Game g){
 			int coupChoisis;
 			for(it=nextGS.begin();it!=nextGS.end();it++){
 				enAvant(*it);
-				if (res.getSortie() > max){
-					max = res.getSortie();
+				if (res->getSortie() > max){
+					max = res->getSortie();
 					coupChoisis = index;
 				}
 				index ++;

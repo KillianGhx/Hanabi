@@ -18,7 +18,7 @@ using namespace std;
 
 int main() {
 
-	Game h = Game(5,4,0,false,true);
+	Game h = Game(5,4,6,false,true);
 
 
 	return 0;

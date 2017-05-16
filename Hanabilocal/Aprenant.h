@@ -12,13 +12,13 @@
 
 class Aprenant{
 private :
-	Reseau res;
+	Reseau *res;
 public :
 	Aprenant();
 	Aprenant(vector<int>);
-	~Aprenant(){};
+	~Aprenant(){delete res;};
 	double enAvant(vector<double> entrer);
-	vector<int> previsionCoup(Game g);
+	vector<int> previsionCoup(Game *g);
 
 	//apprentissage sur une partie enregistrer en binaire
 	void learn(vector<vector<double>>,int target);

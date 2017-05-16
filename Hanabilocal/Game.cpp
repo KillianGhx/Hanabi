@@ -5,6 +5,7 @@
  *      Author: ubuntu
  */
 #include "Game.h"
+#include "Aprenant.h"
 
 
 Game::Game() {
@@ -96,6 +97,16 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 		indexJoueurCourant++;
 		it->main = plateau.distribution(nombrecarte);
 	} // Distribution des cartes pour chaque joueurs
+
+
+
+
+
+
+
+
+	//************************************* debut du jeu ************************************************
+
 	while (plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
 			&& compteurFin > 0) { //Boucle while pour le d�roulement de la partie
 
@@ -113,13 +124,12 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 				if (it->isIsIa()) { // Si IA
 					//choix = it->IArandomchose(); // IA LVL1
 					vector<double> gs;
-					gs  = gameState();
-//					if(it->peutJouer(this->plateau)){
-//						choix = 1;
-//					}
-//					else {
-//						choix = 2;
-//					}
+					if(it->peutJouer(this->plateau)){
+						choix = 1;
+					}
+					else {
+						choix = 2;
+					}
 					cout << "Choix de l'IA : " << choix << endl;
 				} else { // Si pas d'IA
 					cin >> choix;

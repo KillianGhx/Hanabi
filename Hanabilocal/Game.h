@@ -9,7 +9,6 @@
 #define GAME_H_
 #include "Plateau.h"
 #include "Joueur.h"
-#include "Aprenant.h"
 
 class Game{
 private:

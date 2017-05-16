@@ -155,7 +155,6 @@ void Reseau::input(vector<double> input) {
 }
 
 void Reseau::affiche() {
-	//Ca marche mais je sais pas pkoi lol
 	cout << endl;
 	int indexT = 0;
 	int nbCC = 1;
@@ -265,6 +264,39 @@ void Reseau::transfert(){
 	}
 }
 
+void Reseau::transfert2(){
+	int indexCouche = NBCOUCHE - 2; // On va defiler out et on s'arretera lorsqu'il atteindra la sortie
+	int memo;
+	while( indexCouche >= 0 ){
+		int indexPds=0;
+		int k=0;
+		for(int i=0; i < taille[indexCouche]; i++){
+			for(int j=indexPds; j < (taille[indexCouche+1]+1)+indexPds ; j++  ){
+				if((j%(taille[indexCouche+1]+1)) == 0){ //Alors c'est le biais
+					out[indexCouche][i] = poids[indexCouche][j];
+				}
+				else{
+					out[indexCouche][i] += poids[indexCouche][j] * out[indexCouche+1][k];
+					k++;
+				}
+				memo=j;
+			}
+			if(indexCouche==0 && i==0){
+				out[indexCouche][i];
+			}
+			else{
+				out[indexCouche][i] = sigmoide(out[indexCouche][i]);
+			}
+
+			k=0;
+			indexPds=memo+1;
+		}
+		indexCouche--;
+	}
+}
+
+
+
 double Reseau::sigmoide(double val){
 		return (1/(1+exp(-val)));
 	}
@@ -356,6 +388,8 @@ double Reseau::backprop(vector <double> in, double target){
 	erreur = abs(out[0][0] - target);
 	return erreur;
 }
+
+
 
 vector <double> Reseau::getPoids(){
 	vector <double> pds;

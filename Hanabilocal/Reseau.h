@@ -37,6 +37,7 @@ public :
 	void afficheT();
 	void input(vector<double> input);
 	void transfert();
+	void transfert2();
 	double backprop(vector <double> in, double target);
 	double signalErreur(double target, double out);
 	int maxTaille();

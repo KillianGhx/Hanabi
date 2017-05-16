@@ -38,8 +38,14 @@ Game::Game(const Game &g){
 Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 
 
+
 	this->compteurFin = this->nombre_joueur;
 	this->indexJoueurCourant =0;
+	vector<int> v;
+	v.push_back(1);
+	v.push_back(80);
+	v.push_back(100);
+	Aprenant ap = Aprenant(v);
 
 	//sauvegarde de la partis pour l'apprenant
 	vector<vector<double>> saugegarde;
@@ -103,12 +109,14 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 
 
 
-
+	vector<int> coupAprenant;
 
 	//************************************* debut du jeu ************************************************
 
 	while (plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
 			&& compteurFin > 0) { //Boucle while pour le d�roulement de la partie
+
+		coupAprenant = ap.previsionCoup(this);
 
 		for (it = joueurs.begin(); it != joueurs.end(); it++) { // Boucle pour chaque joueurs
 			plateau.affiche2D();
@@ -124,12 +132,13 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 				if (it->isIsIa()) { // Si IA
 					//choix = it->IArandomchose(); // IA LVL1
 					vector<double> gs;
-					if(it->peutJouer(this->plateau)){
-						choix = 1;
-					}
-					else {
-						choix = 2;
-					}
+//					if(it->peutJouer(this->plateau)){
+//						choix = 1;
+//					}
+//					else {
+//						choix = 2;
+//					}
+					choix = coupAprenant[0];
 					cout << "Choix de l'IA : " << choix << endl;
 				} else { // Si pas d'IA
 					cin >> choix;
@@ -141,7 +150,8 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 
 				if (it->isIsIa()) { //Si IA
 					//num_carte = it->IArandomnumerocarte(nombrecarte); // IA LVL 1
-					num_carte=it->JouerCoup(this->plateau);
+//					num_carte=it->JouerCoup(this->plateau);
+					num_carte=coupAprenant[1];
 					cout << "Carte jouer par l'IA : " << num_carte << endl;
 				} else { // Pas d'IA
 					do { // Verifie que la carte entre est valable
@@ -235,12 +245,12 @@ vector<double> conversion(vector<int> v){
 
 vector<vector<double>> Game::nextGameState(){
 	vector<vector<double>> next;
-	Game g;
+	Game *g;
 	for (int action = 1;action<3;action++){
 		for( int carte = 0;carte<nbcartesmain;carte++){
-			g=Game(*this);
-			g.jouerCoup(action,carte,this->indexJoueurCourant);
-			next.push_back(g.gameState());
+			g= new Game(*this);
+			g->jouerCoup(action,carte,this->indexJoueurCourant);
+			next.push_back(g->gameState());
 		}
 	}
 	return next;

@@ -41,13 +41,17 @@ Game::Game(int n,int seed){
 	bool affiche=false;
 	vector<Joueur>::iterator it;
 	vector<int> choix;
-
-	Aprenant *ap = new Aprenant({1,80,89});
+	Joueur *killian;
+	Joueur *louis;
+	Aprenant *ap = new Aprenant({1,80,93});
 	srand(seed);
+
 	for (int i = 0;i<5000;i++){
 		cout << "Iteration : " << i << endl;
+		vector<Carte> main;
 
 		//************************* phase d'initialisation*****************************
+
 		vector<vector<double>> sauvegarde;
 		this->nombre_joueur = 2;
 		this->compteurFin = this->nombre_joueur;
@@ -55,14 +59,16 @@ Game::Game(int n,int seed){
 		this->indexJoueurCourant=0;
 		this->nbcartesmain=4;
 		//creation des joueurs
-		vector<Carte> main;
-		Joueur killian = Joueur("killian",0,true,main);
-		Joueur louis = Joueur("louis",1,true,main);
-		killian.setMain(plateau.distribution(nbcartesmain));
-		louis.setMain(plateau.distribution(nbcartesmain));
 
-		this->joueurs.push_back(killian);
-		this->joueurs.push_back(louis);
+		killian = new Joueur("killian",0,true,main);
+		louis = new Joueur("louis",1,true,main);
+		main = vector<Carte>();
+		killian->setMain(plateau.distribution(nbcartesmain));
+		louis->setMain(plateau.distribution(nbcartesmain));
+
+		this->joueurs=vector<Joueur>();
+		this->joueurs.push_back(*killian);
+		this->joueurs.push_back(*louis);
 
 		//******************************** debut de la partie ************************************
 		cout << "debut de la partie" << endl;

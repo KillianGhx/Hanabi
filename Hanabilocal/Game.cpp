@@ -39,15 +39,18 @@ Game::Game(const Game &g){
 Game::Game(int n,int seed){
 
 	bool affiche=false;
-	vector<Joueur>::iterator it;
+	double moy;
 	vector<int> choix;
 	Joueur *killian;
 	Joueur *louis;
 	Aprenant *ap = new Aprenant({1,80,93});
 	srand(seed);
 
-	for (int i = 0;i<5000;i++){
-		cout << "Iteration : " << i << endl;
+
+	for (int i = 0;i<50000;i++){
+		if(i%100 == 0) cout << "moyenne = " << moy/100 << endl;
+		if(i%100 == 0) moy =0;
+//		cout << "Iteration : " << i << endl;
 		vector<Carte> main;
 
 		//************************* phase d'initialisation*****************************
@@ -71,7 +74,7 @@ Game::Game(int n,int seed){
 		this->joueurs.push_back(*louis);
 
 		//******************************** debut de la partie ************************************
-		cout << "debut de la partie" << endl;
+//		cout << "debut de la partie" << endl;
 
 		while(this->plateau.getJetonRouge() > 0 && !plateau.isJeuFini() && compteurFin > 0){
 
@@ -96,7 +99,10 @@ Game::Game(int n,int seed){
 			}
 		}
 		ap->learn(sauvegarde,plateau.calculpoint());
-		cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
+//		cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
+		moy+=plateau.calculpoint();
+		delete(killian);
+		delete(louis);
 	}
 }
 
@@ -319,6 +325,7 @@ vector<vector<double>> Game::nextGameState(){
 			g->jouerCoup(action,carte);
 			v=g->gameState();
 			next.push_back(v);
+			delete(g);
 		}
 	}
 	return next;

@@ -28,16 +28,15 @@ double Aprenant::enAvant(vector<double> gameState){
 	return res->getSortie();
 }
 
-vector<int> Aprenant::previsionCoup(Game *g){
-			vector<vector<double>> nextGS = g->nextGameState();
+vector<int> Aprenant::previsionCoup(Game g){
+			vector<vector<double>> nextGS = g.nextGameState();
 			vector<vector<double>>::iterator it;
 			vector<int> out;
 			double max = -100000000;
 			int index = 0;
-			int coupChoisis;
+			int coupChoisis=1;
 			for(it=nextGS.begin();it!=nextGS.end();it++){
-				enAvant(*it);
-				if (res->getSortie() > max){
+				if (enAvant(*it) > max){
 					max = res->getSortie();
 					coupChoisis = index;
 				}
@@ -50,6 +49,8 @@ vector<int> Aprenant::previsionCoup(Game *g){
 				out.push_back(2);
 			}
 			out.push_back(coupChoisis/2);
+			cout << "choix de l'ia : " << out[0] << endl;
+			cout << "carte : " << out[1] << endl;
 			return out;
 }
 

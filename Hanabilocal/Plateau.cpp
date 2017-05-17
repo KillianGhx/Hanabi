@@ -78,6 +78,7 @@ void Plateau::poser(Carte c ){
 			bleus.push(c);
 		}
 		else{
+			this->defausser(c);
 			JetonRouge--;
 		}
 
@@ -87,6 +88,7 @@ void Plateau::poser(Carte c ){
 			jaunes.push(c);
 		}
 		else{
+			this->defausser(c);
 			JetonRouge--;
 			}
 		break;
@@ -94,22 +96,28 @@ void Plateau::poser(Carte c ){
 		if (verts.top().getNumero()+1==c.getNumero()){
 			verts.push(c);
 		}
-		else
+		else{
+					this->defausser(c);
 					JetonRouge--;
+		}
 		break;
 	case 4 :
 		if (rouges.top().getNumero()+1==c.getNumero()){
 			rouges.push(c);
 		}
-		else
+		else{
+					this->defausser(c);
 					JetonRouge--;
+		}
 		break;
 	case 5 :
 		if (blancs.top().getNumero()+1==c.getNumero()){
 			blancs.push(c);
 		}
-		else
+		else{
+					this->defausser(c);
 					JetonRouge--;
+		}
 		break;
 	}
 }

@@ -20,6 +20,7 @@ private:
 	int indexJoueurCourant;
 public :
 	Game();
+	Game(int joueur,int seed);
 	~Game(){};
 	Game(const Game & g);
 	Game(int nb_joueur,int nbcartes,int seed, bool save, bool ia);
@@ -27,9 +28,10 @@ public :
 	void defausser();
 	void poser();
 	void afficherJoueur();
+	Game(int n);
 	vector<double> gameState();
 	vector<vector<double>> nextGameState();
-	void jouerCoup(int action,int carte,int joueur);
+	void jouerCoup(int action,int carte);
 };
 
 

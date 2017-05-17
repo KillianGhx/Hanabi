@@ -26,6 +26,7 @@ Game::Game() {
 
 }
 
+
 Game::Game(const Game &g){
 	this->compteurFin=g.compteurFin;
 	this->indexJoueurCourant=g.indexJoueurCourant;
@@ -35,10 +36,63 @@ Game::Game(const Game &g){
 	this->plateau=g.plateau;
 }
 
+Game::Game(int n,int seed){
+
+	vector<Joueur>::iterator it;
+	vector<int> choix;
+
+	Aprenant *ap = new Aprenant({1,80,89});
+	srand(seed);
+	for (int i = 0;i<5000;i++){
+
+		//************************* phase d'initialisation*****************************
+		vector<vector<double>> sauvegarde;
+		this->nombre_joueur = 2;
+		this->compteurFin = this->nombre_joueur;
+		this->plateau=Plateau(rand());
+		this->indexJoueurCourant=0;
+		this->nbcartesmain=4;
+		//creation des joueurs
+		vector<Carte> main;
+		Joueur killian = Joueur("killian",0,true,main);
+		Joueur louis = Joueur("louis",1,true,main);
+		killian.setMain(plateau.distribution(nbcartesmain));
+		louis.setMain(plateau.distribution(nbcartesmain));
+
+		this->joueurs.push_back(killian);
+		this->joueurs.push_back(louis);
+
+		//******************************** debut de la partie ************************************
+		cout << "debut de la partie" << endl;
+
+		while(this->plateau.getJetonRouge() > 0 && !plateau.isJeuFini() && compteurFin > 0){
+
+			//initialisation de la sauvegarde
+			sauvegarde = vector<vector<double>>();
+			//On fait joueur tout les joueurs
+
+			for (int x=0;x != this->nombre_joueur;x++){
+				sauvegarde.push_back(this->gameState());
+				plateau.affiche2D();
+				choix= ap->previsionCoup(*this);
+				cout << "test" << endl;
+				jouerCoup(choix[0],choix[1]);
+				plateau.fini();
+				if(this->plateau.paquet.taille()== 0){
+					compteurFin--;
+				}
+				cout << indexJoueurCourant << endl;
+			}
+		}
+		ap->learn(sauvegarde,plateau.calculpoint());
+		cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
+	}
+}
+
 Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 
-
-
+	for (int n=0;n<50000;n++){
+	this->nombre_joueur=nb_joueur;
 	this->compteurFin = this->nombre_joueur;
 	this->indexJoueurCourant =0;
 	vector<int> v;
@@ -48,11 +102,11 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	Aprenant ap = Aprenant(v);
 
 	//sauvegarde de la partis pour l'apprenant
-	vector<vector<double>> saugegarde;
+	vector<vector<double>> sauvegarde;
 
 	//Initialisation des 5 joueurs
 	vector<Carte> mainDeLouis;
-	Joueur louis = Joueur("Louis", 1, ia, mainDeLouis); // TRUE = IA, FALSE = HUMAN
+	Joueur louis = Joueur("Louis", 1, ia, mainDeLouis);
 	vector<Carte> mainDeKillian;
 	Joueur killian = Joueur("Killian", 2, ia, mainDeKillian);
 	vector<Carte> mainDeHamid;
@@ -62,6 +116,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	vector<Carte> mainDeDavid;
 	Joueur david = Joueur("David", 5, ia, mainDeDavid);
 
+	joueurs = vector<Joueur>();
 	if (nb_joueur == 2) {
 		joueurs.push_back(louis);
 		joueurs.push_back(killian);
@@ -87,10 +142,11 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 		joueurs.push_back(margot);
 		joueurs.push_back(david);
 	}
+
 	//Init des variables
 	nbcartesmain = nombrecarte;
 	nombre_joueur = nb_joueur;
-	plateau = Plateau(seed);
+	plateau = Plateau(rand()%10000);
 
 	//Cr�ations des variables utilis�s
 	int num_carte; // Celle qui va etre jou�
@@ -112,12 +168,11 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 	vector<int> coupAprenant;
 
 	//************************************* debut du jeu ************************************************
-
 	while (plateau.getJetonRouge() > 0 && !plateau.isJeuFini()
 			&& compteurFin > 0) { //Boucle while pour le d�roulement de la partie
-
-		coupAprenant = ap.previsionCoup(this);
-
+		coupAprenant = ap.previsionCoup(*this);
+		indexJoueurCourant=0;
+		sauvegarde.push_back(this->gameState());
 		for (it = joueurs.begin(); it != joueurs.end(); it++) { // Boucle pour chaque joueurs
 			plateau.affiche2D();
 			for (it2 = joueurs.begin(); it2 != joueurs.end(); it2++) {
@@ -199,13 +254,12 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 					&& compteurFin > 0)) { // SI LE JEU SE TERMINE AVANT LA FIN DE LA BOUCLE FOR QUI PARCOURT TOUT LES JOUEURS
 				break;
 			}
-			gameState();
 			choix = 0;
 			plateau.fini();
-
+			indexJoueurCourant++;
 		}
 	}
-
+	ap.learn(sauvegarde,plateau.calculpoint());
 	cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
 	if (save) {
 		ofstream fichierSauvegarde(
@@ -214,6 +268,7 @@ Game::Game(int nb_joueur, int nombrecarte, int seed, bool save, bool ia) {
 		fichierSauvegarde << plateau.calculpoint() << endl;
 		fichierSauvegarde.close();
 
+	}
 	}
 
 }
@@ -246,34 +301,34 @@ vector<double> conversion(vector<int> v){
 vector<vector<double>> Game::nextGameState(){
 	vector<vector<double>> next;
 	Game *g;
+	vector<double> v;
 	for (int action = 1;action<3;action++){
 		for( int carte = 0;carte<nbcartesmain;carte++){
 			g= new Game(*this);
-			g->jouerCoup(action,carte,this->indexJoueurCourant);
-			next.push_back(g->gameState());
+			g->jouerCoup(action,carte);
+			v=g->gameState();
+			next.push_back(v);
 		}
 	}
 	return next;
 }
 
-void Game::jouerCoup(int action,int indexCarte,int indexJoueur){
+void Game::jouerCoup(int action,int indexCarte){
 
 	if(action == 1){
-		plateau.poser(joueurs[indexJoueur].main[indexCarte]);
-		joueurs[indexJoueur].jeterCarte(indexCarte);
+		plateau.poser(joueurs[this->indexJoueurCourant].main[indexCarte]);
 		if(plateau.sizePaquet()> 0){
-			joueurs[indexJoueur].main[indexCarte]=piocher();
+			joueurs[this->indexJoueurCourant].main[indexCarte]=piocher();
 		}
 	}
 	else {
-		joueurs[indexJoueur].jeterCarte(indexCarte);
-		joueurs[indexJoueur].jeterCarte(indexCarte);
+		plateau.defausser(joueurs[this->indexJoueurCourant].main[indexCarte]);
 		if(plateau.sizePaquet()> 0){
-			joueurs[indexJoueur].main[indexCarte]=piocher();
+			joueurs[this->indexJoueurCourant].main[indexCarte]=piocher();
 		}
 	}
-
-
+	this->indexJoueurCourant++;
+	this->indexJoueurCourant%=2;
 }
 
 // Creation de la gameState representant l'etat du jeu en binaire
@@ -294,7 +349,6 @@ vector<double> Game::gameState(){
 
 	// dans un premier temps on enregistre les données du plateau dans res
 	res = this->plateau.getState();
-
 	//on enregistre la valeur des feux dans une liste de double pour correcponde aux fonctions de test
 //	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
 //		// on insert la valeur des feux sur 3 bits 5 feux * 3 bits 15 bits
@@ -307,16 +361,15 @@ vector<double> Game::gameState(){
 		tmp = carteToBool(*itCarte);
 		res.insert(res.end(),tmp.begin(),tmp.end());
 
-
 		//On insere dans la gamestate si les cartes sont jouable/morte/defaussable (3 bits par cartes)
-		afficheCarte(*itCarte);
+//		afficheCarte(*itCarte);
 		carteDouble.clear();
 		carteDouble.push_back(itCarte->getColor().toInt());
 		carteDouble.push_back(itCarte->getNumero());
 		carteDouble.insert(carteDouble.end(),valuedesfeux.begin(),valuedesfeux.end());
-		cout << "posable :" << peutPoser2(carteDouble) << endl;
+//		cout << "posable :" << peutPoser2(carteDouble) << endl;
 		res.push_back(peutPoser2(carteDouble));
-		cout << "morte :" << dispensable(carteDouble) << endl;
+//		cout << "morte :" << dispensable(carteDouble) << endl;
 		res.push_back(dispensable(carteDouble));
 
 		carteDouble.clear();
@@ -327,7 +380,7 @@ vector<double> Game::gameState(){
 
 	}
 
-	if (this->joueurs[this->indexJoueurCourant].main.size()<nbcartesmain){
+	if (this->joueurs[this->indexJoueurCourant].main.size()<(unsigned)nbcartesmain){
 		for (int i = 0;i<9;i++){
 			res.push_back(0);
 		}
@@ -338,9 +391,22 @@ vector<double> Game::gameState(){
 		res.push_back(*itres);
 	}
 
-	//on enregistre le nombre de tours restant sur 6bits
-	vector<int> nbTourRestant = toBool(this->plateau.sizePaquet()+compteurFin,6);
-	res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
+	//on enregistre le nombre de tours restant sur 3bits
+	vector<int> nbTourRestant;
+
+	if (this->plateau.paquet.taille() !=  0){
+		for (int val = 0;val < 3;val ++){
+			res.push_back(0);
+		}
+	}
+	else{
+		nbTourRestant = toBool(this->compteurFin,3);
+		res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
+	}
+
+//	vector<int> nbTourRestant = vector<int>();
+//	nbTourRestant = toBool(this->plateau.sizePaquet()+compteurFin,6);
+//	res.insert(res.end(),nbTourRestant.begin(),nbTourRestant.end());
 
 
 //	cout << "affichage de la gamestate : "  << endl;
@@ -348,49 +414,49 @@ vector<double> Game::gameState(){
 //		cout << *itres ;
 //	}
 
-	int i = 0;
-	cout << "nombre de jetons : " << endl;
-	for (i = 0;i<2;i++){
-		cout << res[i];
-	}
-	cout << endl;
-	cout << "score actuel : " <<endl;
-	for ( ; i< 7 ; i++){
-		cout << res[i];
-	}
-	cout << endl ;
-	int c = 0;
-	cout << "valeur des feus" << endl;
-	for (; i< 22 ; i++){
-		c++;
-		cout << res[i];
-		if (c%3 == 0) cout << " ";
-	}
-
-	cout << endl << "nombre de cartes du paquet" << endl;
-	for (;i<28;i++){
-		cout << res[i];
-	}
-	cout << endl << "affichage des cartes de la main" << endl;
-	c=0;
-	for (;i < 28 + 9*nbcartesmain;i++){
-		cout << res[i];
-		c++;
-		if (c%3 == 0) cout << " ";
-		if (c%9 == 0) cout << endl;
-	}
-	cout << endl;
-
-	cout << "affichage de la defausse : " << endl;
-	for(;i < 28 + 9*nbcartesmain +25;i++){
-		cout << res[i];
-	}
-	cout << endl;
-	cout << "affichage du nombre de tour restant" << endl;
-	for (;i<28 + 9*nbcartesmain+31;i++){
-		cout << res[i] ;
-	}
-	cout << endl;
+//	int i = 0;
+//	cout << "nombre de jetons : " << endl;
+//	for (i = 0;i<2;i++){
+//		cout << res[i];
+//	}
+//	cout << endl;
+//	cout << "score actuel : " <<endl;
+//	for ( ; i< 7 ; i++){
+//		cout << res[i];
+//	}
+//	cout << endl ;
+//	int c = 0;
+//	cout << "valeur des feus" << endl;
+//	for (; i< 22 ; i++){
+//		c++;
+//		cout << res[i];
+//		if (c%3 == 0) cout << " ";
+//	}
+//
+//	cout << endl << "nombre de cartes du paquet" << endl;
+//	for (;i<28;i++){
+//		cout << res[i];
+//	}
+//	cout << endl << "affichage des cartes de la main" << endl;
+//	c=0;
+//	for (;i < 28 + 9*nbcartesmain;i++){
+//		cout << res[i];
+//		c++;
+//		if (c%3 == 0) cout << " ";
+//		if (c%9 == 0) cout << endl;
+//	}
+//	cout << endl;
+//
+//	cout << "affichage de la defausse : " << endl;
+//	for(;i < 28 + 9*nbcartesmain +25;i++){
+//		cout << res[i];
+//	}
+//	cout << endl;
+//	cout << "affichage du nombre de tour restant" << endl;
+//	for (;i<28 + 9*nbcartesmain+31;i++){
+//		cout << res[i] ;
+//	}
+//	cout << endl;
 
 	return conversion(res);
 

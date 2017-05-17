@@ -204,14 +204,14 @@ int Joueur::DefausseIA3(Plateau p) {
 	vector<Carte>::iterator itman2;
 	int compteur = 0;
 	for (itman = this->main.begin(); itman != this->main.end(); itman++) {
-		for (itman2 = lil.begin(); itman2 != lil.end(); itman2++) { // défile all tops
+		for (itman2 = lil.begin(); itman2 != lil.end(); itman2++) { // dï¿½file all tops
 			if (itman->getColor() == itman2->getColor()
-					&& itman->getNumero() <= itman2->getNumero()) { //Si la carte a ete deja joué
+					&& itman->getNumero() <= itman2->getNumero()) { //Si la carte a ete deja jouï¿½
 				return compteur;
 			}
 			break;
 		}
-		for (itman2 = lel.begin(); itman2 != lel.end(); itman2++) { // Défile la defausse
+		for (itman2 = lel.begin(); itman2 != lel.end(); itman2++) { // Dï¿½file la defausse
 			if (!(itman->getColor() == itman2->getColor()
 					&& itman->getNumero() == itman2->getNumero())) {
 				if (itman->getNumero() != 5) {

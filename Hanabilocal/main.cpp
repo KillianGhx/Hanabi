@@ -18,8 +18,9 @@ using namespace std;
 
 int main() {
 
-	Game h = Game(5,4,6,false,true);
+	vector<double> res;
 
+	Game h = Game(5000,10);
 
 	return 0;
 }

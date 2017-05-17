@@ -38,12 +38,14 @@ Game::Game(const Game &g){
 
 Game::Game(int n,int seed){
 
+	bool affiche=false;
 	vector<Joueur>::iterator it;
 	vector<int> choix;
 
 	Aprenant *ap = new Aprenant({1,80,89});
 	srand(seed);
 	for (int i = 0;i<5000;i++){
+		cout << "Iteration : " << i << endl;
 
 		//************************* phase d'initialisation*****************************
 		vector<vector<double>> sauvegarde;
@@ -73,15 +75,18 @@ Game::Game(int n,int seed){
 
 			for (int x=0;x != this->nombre_joueur;x++){
 				sauvegarde.push_back(this->gameState());
-				plateau.affiche2D();
+				if(affiche){
+					plateau.affiche2D();
+				}
+
 				choix= ap->previsionCoup(*this);
-				cout << "test" << endl;
+				//cout << "test" << endl;
 				jouerCoup(choix[0],choix[1]);
 				plateau.fini();
 				if(this->plateau.paquet.taille()== 0){
 					compteurFin--;
 				}
-				cout << indexJoueurCourant << endl;
+				//cout << indexJoueurCourant << endl;
 			}
 		}
 		ap->learn(sauvegarde,plateau.calculpoint());

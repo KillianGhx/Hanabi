@@ -49,8 +49,8 @@ vector<int> Aprenant::previsionCoup(Game g){
 				out.push_back(2);
 			}
 			out.push_back(coupChoisis/2);
-			cout << "choix de l'ia : " << out[0] << endl;
-			cout << "carte : " << out[1] << endl;
+			//cout << "choix de l'ia : " << out[0] << endl;
+			//cout << "carte : " << out[1] << endl;
 			return out;
 }
 

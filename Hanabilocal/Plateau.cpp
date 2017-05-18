@@ -292,9 +292,9 @@ void Plateau::afficheDefausse(){
 	vector<double> Plateau::getFeu(){
 		vector<double> res;
 		res.push_back(bleus.top().getNumero());
-		res.push_back(jaunes.top().getNumero());
 		res.push_back(rouges.top().getNumero());
-		res.push_back(verts.top().getNumero());
 		res.push_back(blancs.top().getNumero());
+		res.push_back(jaunes.top().getNumero());
+		res.push_back(verts.top().getNumero());
 		return res;
 	}

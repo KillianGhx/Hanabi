@@ -6,7 +6,11 @@
  */
 #include "Game.h"
 #include "Aprenant.h"
+#include <math.h>
 
+double sigmoide(double val){
+		return (1/(1+exp(-val)));
+	}
 
 Game::Game() {
 	nbcartesmain = 0;
@@ -39,18 +43,24 @@ Game::Game(const Game &g){
 Game::Game(int n,int seed){
 
 	bool affiche=false;
-	double moy;
+	double moy = 0;
+	double val =0;
 	vector<int> choix;
 	Joueur *killian;
 	Joueur *louis;
 	Joueur *killianl;
 	Joueur *louisl;
-	Aprenant *ap = new Aprenant({1,40,92});
+	Aprenant *ap = new Aprenant({1,80,93});
+	int max = 0;
 	srand(seed);
+	int cible = 1;
+	int y = rand();
 
+	for (int i = 0;i<100000;i++){
+		if(i%1000 == 0 ){
+			cout << "moyenne = " << moy/1000 << endl;
 
-	for (int i = 0;i<10000000;i++){
-		if(i%1000 == 0) cout << "moyenne = " << moy/1000 << endl;
+		}
 		if(i%1000 == 0) {moy =0;
 		cout << "nombre d'iteration : " << (i) << endl;
 		}
@@ -58,20 +68,19 @@ Game::Game(int n,int seed){
 		vector<Carte> main;
 
 		//************************* phase d'initialisation*****************************
-
+		if (i%10 == 0) y = rand()%10000;
 		vector<vector<double>> sauvegarde;
 		this->nombre_joueur = 4;
-		this->compteurFin = (this->nombre_joueur-1);
-		this->plateau=Plateau(rand());
+		this->compteurFin = 4;
+		this->plateau=Plateau(y);
 		this->indexJoueurCourant=0;
 		this->nbcartesmain=4;
 		//creation des joueurs
-
+		main = vector<Carte>();
 		killian = new Joueur("killian",0,true,main);
 		louis = new Joueur("louis",1,true,main);
-		killianl = new Joueur("louis",1,true,main);
-		louisl = new Joueur("louis",1,true,main);
-		main = vector<Carte>();
+		killianl = new Joueur("hamid",2,true,main);
+		louisl = new Joueur("paul",3,true,main);
 		killian->setMain(plateau.distribution(nbcartesmain));
 		louisl->setMain(plateau.distribution(nbcartesmain));
 		killianl->setMain(plateau.distribution(nbcartesmain));
@@ -85,38 +94,52 @@ Game::Game(int n,int seed){
 
 		//******************************** debut de la partie ************************************
 //		cout << "debut de la partie" << endl;
+		//initialisation de la sauvegarde
+		sauvegarde = vector<vector<double>>();
 
 		while(this->plateau.getJetonRouge() > 0 && !plateau.isJeuFini() && compteurFin > 0) {
 
-			//initialisation de la sauvegarde
-			sauvegarde = vector<vector<double>>();
 			//On fait joueur tout les joueurs
 
-			for (int x=0;x != this->nombre_joueur;x++){
-				sauvegarde.push_back(this->gameState());
-				if(affiche){
-					plateau.affiche2D();
-				}
+			for (int x=0;x < nombre_joueur;x++){
+				if (compteurFin >0 && plateau.getJetonRouge() > 0 && !plateau.isJeuFini()){
 
+				sauvegarde.push_back(this->gameState());
 				choix= ap->previsionCoup(*this);
-//				int choi;
-//								if(joueurs[indexJoueurCourant].peutJouer(this->plateau)){
-//										choi = 1;
-//									}
-//									else {
-//										choi = 2;
-//									}
-//								int num = joueurs[indexJoueurCourant].JouerCoup(this->plateau)%4;
-//				cout << num << endl;
+//				cout << "joueur courant : " << x << endl;
+//				for (int j = 0;j<4;j++){
+//					joueurs[j].afficher();
+//				}
 				jouerCoup(choix[0],choix[1]);
+
+//					plateau.affiche2D();
 				plateau.fini();
 			}
+			}
 		}
-		ap->learn(sauvegarde,plateau.calculpoint());
-//		cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
-		moy+=plateau.calculpoint();
+		int point = this->plateau.calculpoint();
+		if (point > max){
+			max = point;
+			cout << "max" << max <<endl;
+		}
+		if (point != 0){
+		ap->learn(sauvegarde,point);
+		}
+//			if (this->plateau.calculpoint()> cible){
+//			if (plateau.calculpoint() > val){
+//			ap->learn(sauvegarde,1);
+//			}
+//			else ap->learn(sauvegarde,1);
+//
+//			}
+//			else if (moy <= (cible/2)) ap->learn(sauvegarde,0);
+//			if (this->plateau.calculpoint()> max) {max = plateau.calculpoint(); cout << "max" << max << endl;}
+			moy+=plateau.calculpoint();
+//			cout << "Jeu fini : score : " << plateau.calculpoint() << endl;
 		delete(killian);
 		delete(louis);
+		delete(killianl);
+		delete(louisl);
 	}
 }
 
@@ -338,7 +361,6 @@ vector<vector<double>> Game::nextGameState(){
 			g= new Game(*this);
 			g->jouerCoup(action,carte);
 			v=g->gameState();
-//			afficheGS(v);
 			next.push_back(v);
 			delete(g);
 		}
@@ -364,7 +386,8 @@ void Game::jouerCoup(int action,int indexCarte){
 		compteurFin--;
 	}
 	this->indexJoueurCourant++;
-	this->indexJoueurCourant%=2;
+	this->indexJoueurCourant%=this->nombre_joueur;
+
 }
 
 // fonction permettant d'afficher une GameState
@@ -439,12 +462,7 @@ vector<double> Game::gameState(){
 
 	// dans un premier temps on enregistre les données du plateau dans res
 	res = this->plateau.getState();
-	//on enregistre la valeur des feux dans une liste de double pour correcponde aux fonctions de test
-//	for(it2 = valuedesfeux.begin();it2 != valuedesfeux.end();it2++){
-//		// on insert la valeur des feux sur 3 bits 5 feux * 3 bits 15 bits
-//		tmp = toBool(*it2,3);
-//		res.insert(res.end(),tmp.begin(),tmp.end());
-//	}
+
 
 	// On enregistre toute les cartes des mains des joueurs (sur 6 bits)
 	for(itCarte = joueurs[this->indexJoueurCourant].main.begin();itCarte != joueurs[this->indexJoueurCourant].main.end();itCarte++){

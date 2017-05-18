@@ -7,7 +7,7 @@
 #include "Aprenant.h"
 
 Aprenant::Aprenant(){
-	res = new Reseau({1,80,100});
+	res = new Reseau({1,41,100});
 }
 
 Aprenant::Aprenant(vector<int> v){
@@ -32,7 +32,7 @@ vector<int> Aprenant::previsionCoup(Game g){
 			vector<vector<double>> nextGS = g.nextGameState();
 			vector<vector<double>>::iterator it;
 			vector<int> out;
-			double max = -100000000;
+			float max = -100000000;
 			int index = 0;
 			int coupChoisis=1;
 			for(it=nextGS.begin();it!=nextGS.end();it++){

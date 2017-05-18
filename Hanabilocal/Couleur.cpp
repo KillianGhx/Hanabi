@@ -24,10 +24,11 @@ Couleur::Couleur(string couleur){
 
 int Couleur::toInt(){
 		if (this->color == "bleu") return 0;
-		if (this->color == "rouge") return 1;
-		if (this->color == "blanc" ) return 2;
-		if (this->color == "jaune") return 3;
-		if (this->color =="vert") return 4;
+		else if (this->color == "rouge") return 1;
+		else if (this->color == "blanc" ) return 2;
+		else if (this->color == "jaune") return 3;
+		else if (this->color =="vert") return 4;
+		else return 5;
 }
 
 void Couleur::affiche(){

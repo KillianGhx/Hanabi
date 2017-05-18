@@ -16,8 +16,14 @@ Aprenant::Aprenant(vector<int> v){
 
 void Aprenant::learn(vector<vector<double>> partie,int score){
 	vector<vector<double>>::iterator it;
+	double erreur=1;
+	while (erreur >= 0.5 || erreur <= -0.5){
 	for (it =  partie.begin();it != partie.end();it++){
 		res->backprop(*it,res->sigmoide(score));
+		erreur += res->getSortie() - score;
+		erreur/=partie.size();
+//		cout << "erreur" << erreur <<  endl;
+	}
 	}
 
 }

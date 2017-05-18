@@ -50,7 +50,7 @@ Game::Game(int n,int seed){
 	Joueur *louis;
 	Joueur *killianl;
 	Joueur *louisl;
-	Aprenant *ap = new Aprenant({1,80,93});
+	Aprenant *ap = new Aprenant({1,40,92});
 	int max = 0;
 	srand(seed);
 	int cible = 1;
@@ -68,13 +68,14 @@ Game::Game(int n,int seed){
 		vector<Carte> main;
 
 		//************************* phase d'initialisation*****************************
-		if (i%10 == 0) y = rand()%10000;
+		if (i%1 == 0) y = rand()%10000;
 		vector<vector<double>> sauvegarde;
 		this->nombre_joueur = 4;
 		this->compteurFin = 4;
-		this->plateau=Plateau(y);
+		this->plateau=Plateau(1);
 		this->indexJoueurCourant=0;
 		this->nbcartesmain=4;
+
 		//creation des joueurs
 		main = vector<Carte>();
 		killian = new Joueur("killian",0,true,main);
@@ -104,13 +105,14 @@ Game::Game(int n,int seed){
 			for (int x=0;x < nombre_joueur;x++){
 				if (compteurFin >0 && plateau.getJetonRouge() > 0 && !plateau.isJeuFini()){
 
-				sauvegarde.push_back(this->gameState());
+
 				choix= ap->previsionCoup(*this);
 //				cout << "joueur courant : " << x << endl;
 //				for (int j = 0;j<4;j++){
 //					joueurs[j].afficher();
 //				}
 				jouerCoup(choix[0],choix[1]);
+				sauvegarde.push_back(this->gameState());
 
 //					plateau.affiche2D();
 				plateau.fini();
@@ -122,9 +124,9 @@ Game::Game(int n,int seed){
 			max = point;
 			cout << "max" << max <<endl;
 		}
-		if (point != 0){
+		double erreur;
+
 		ap->learn(sauvegarde,point);
-		}
 //			if (this->plateau.calculpoint()> cible){
 //			if (plateau.calculpoint() > val){
 //			ap->learn(sauvegarde,1);

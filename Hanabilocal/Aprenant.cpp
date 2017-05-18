@@ -24,7 +24,7 @@ void Aprenant::learn(vector<vector<double>> partie,int score){
 
 double Aprenant::enAvant(vector<double> gameState){
 	res->input(gameState);
-	res->transfert();
+	res->transfert2();
 	return res->getSortie();
 }
 

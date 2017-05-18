@@ -32,6 +32,7 @@ public :
 	vector<double> gameState();
 	vector<vector<double>> nextGameState();
 	void jouerCoup(int action,int carte);
+	void afficheGS(vector<double> gs);
 };
 
 

@@ -337,7 +337,7 @@ void Fonctions::defaussableReseau(int sizeAp, int sizeTest){
 	cout <<endl<< "LANCEMENT DU BACKPROP" <<endl;
 	double erreur = 1;
 	double nb=0;
-	while(erreur > 0.1){
+	while(erreur > 0.05){
 		erreur =0;
 	for(int i = 0 ; i < aprentissage.size();i++){
 		res.backprop(aprentissage[i],targetAprentissage[i]);

@@ -86,7 +86,7 @@ void Deck::shuffle(int seed){
 	Carte buffer1,buffer2;
 	int random1;
 	int random2;
-	for(int i =0 ; i< 10000 ; i++){
+	for(int i =0 ; i< 1000 ; i++){
 		random1 = rand()%this->taille();
 		random2 = rand()%this->taille();
 		buffer1 = paquet[random1];

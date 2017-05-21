@@ -216,7 +216,7 @@ void Plateau::afficheDefausse(){
 		}
 		vector<Carte>::iterator it;
 		for (it = defausse.begin();it != defausse.end();it++){
-			res[it->getColor().toInt()*5+it->getNumero()]++;
+			res[it->getColor().toInt()*5+(it->getNumero()-1)]++;
 		}
 		return res;
 	}
@@ -227,8 +227,8 @@ void Plateau::afficheDefausse(){
 		defausse = this->resumedefausse();
 		for (int i = 0;i != defausse.size();i++){
 			if(i%5 == 0 && defausse[i] >= 3) res.push_back(1);
-			else if((i%5 == 1 || i%5 == 2 || i%5 == 3 ) && defausse[i] >= 2) res.push_back(1);
-			else if(i%5 == 4 && defausse[i] >= 1) res.push_back(1);
+			else if((i%5 == 1 || i%5 == 2 || i%5 == 1 ) && defausse[i] >= 2) res.push_back(1);
+			else if (i%5==4 && defausse[i] >= 1) res.push_back(1);
 			else res.push_back(0);
 
 		}

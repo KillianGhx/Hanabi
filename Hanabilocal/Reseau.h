@@ -13,8 +13,8 @@
 #define BORNESUP 1
 #define BORNEINF -1
 #define MAX 200
-#define PAS  0.1
-#define SEED 1
+#define PAS  0.001
+#define SEED 14
 using namespace std;
 
 

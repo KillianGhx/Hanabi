@@ -282,7 +282,7 @@ void Reseau::transfert2(){
 				memo=j;
 			}
 			if(indexCouche==0 && i==0){
-				out[indexCouche][i];
+//				out[indexCouche][i];
 			}
 			else{
 				out[indexCouche][i] = sigmoide(out[indexCouche][i]);
@@ -332,7 +332,11 @@ void Reseau::getDelta(int i, int j){ // MARCHE QUE POUR 2 INCONNU CAD RELIER A 2
 }
 
 double Reseau::signalErreur(double target, double out) {
-	return (target - out) * (out) * (1 - out);
+	return (target-out) * out * (1 - out);
+}
+
+double signalErreur2(double target,double out){
+	return (target - out) ;
 }
 
 double Reseau::majPoid(double signal, double out) {
@@ -347,10 +351,10 @@ double Reseau::backprop(vector <double> in, double target){
 	int memo;
 	int indexCouche=0;
 	this->input(in);
-	this->transfert();
+	this->transfert2();
 	int memoPds=0;
 	for (int nbE=0;nbE < taille[0]; nbE++) { //Couche d'entree
-		signal[0][nbE] = signalErreur(target, out[indexCouche][nbE]);
+		signal[0][nbE] = signalErreur2(target, out[indexCouche][nbE]);
 //		cout << "Signal d'erreur : " << signal[0][nbE] << endl;
 		int memoPds2= memoPds;
 		for (int i = memoPds2; i < (taille[indexCouche + 1] + 1)+memoPds2; i++) { // Mise a jour des poids;
@@ -370,7 +374,7 @@ double Reseau::backprop(vector <double> in, double target){
 			signal[indexCouche][j] = out[indexCouche][j] * (1 - out[indexCouche][j]);
 			somme = 0;
 			for (int i = 0; i < taille[indexCouche - 1]; i++) { // Boucle nombre de connexion entrante
-				somme +=  signal[indexCouche-1][i] * poids[indexCouche - 1][(i*(taille[indexCouche]+1))+1+j]; //avant poids[indexCouche - 1][i+j+1]
+				somme =  signal[indexCouche-1][i] * poids[indexCouche - 1][(i*(taille[indexCouche]+1))+1+j]; //avant poids[indexCouche - 1][i+j+1]
 			}
 			signal[indexCouche][j] *= somme;
 			memo=indexPds;

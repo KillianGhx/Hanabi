@@ -220,27 +220,16 @@ void Fonctions::dispensableReseau(int sizeAp,int sizeTest){
 	//remplissage de l'ensemble de test
 	for (int i = 0;i< sizeTest;i++){
 		tmp = {abs(rand()%5),abs(rand()%6+1),abs(rand()%5),abs(rand()%5),abs(rand()%5),abs(rand()%5),abs(rand()%5)};
-		appartient =false;
-		for(it = aprentissage.begin();it != aprentissage.end();it ++){
-			if((*it)==tmp){
-				appartient=true;
-			}
-		}
-
-		if(!appartient){
 			test.push_back(tmp);
 			targetTest.push_back(dispensable(tmp));
-		}
-		else{
-			i--;
-		}
+
 	}
 	Reseau res({1,8,20,7});
 	//lancement des exemples d'aprentissage avec backprop
 	cout <<endl<< "LANCEMENT DU BACKPROP" <<endl;
 	double erreur = 1;
 	double nb=0;
-	while(erreur > 0.02){
+	while(erreur > 0.017){
 		erreur =0;
 	for(int i = 0 ; i < aprentissage.size();i++){
 		res.backprop(aprentissage[i],targetAprentissage[i]);

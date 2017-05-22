@@ -22,11 +22,11 @@ int main() {
 	vector<double> res;
 
 	Game h = Game(5000,rand());
-	double a;
-	double b;
-	double c;
+//	double a;
+//	double b;
+//	double c;
 //	Fonctions f ;
-	//f.dispensableReseau(10000,30000);
+//	f.dispensableReseau(800000,30000);
 
 
 	return 0;

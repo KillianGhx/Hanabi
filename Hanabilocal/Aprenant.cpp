@@ -7,25 +7,38 @@
 #include "Aprenant.h"
 
 Aprenant::Aprenant(){
-	res = new Reseau({1,41,100});
+	res = new Reseau({1,40,100});
 }
 
 Aprenant::Aprenant(vector<int> v){
 	res = new Reseau(v);
 }
 
-void Aprenant::learn(vector<vector<double>> partie,int score){
+double Aprenant::learn(vector<vector<double>> partie,double score){
 	vector<vector<double>>::iterator it;
-	double erreur=1;
-	while (erreur >= 0.5 || erreur <= -0.5){
+	double erreur=0;
+//	while (erreur > 0.1 || erreur <(-0.1)){
 	for (it =  partie.begin();it != partie.end();it++){
-		res->backprop(*it,res->sigmoide(score));
-		erreur += res->getSortie() - score;
-		erreur/=partie.size();
-//		cout << "erreur" << erreur <<  endl;
+		res->backprop(*it,score);
+		erreur += (res->getSortie() - score);
+//	}
+	erreur/=partie.size();
+//	cout << erreur << endl;
 	}
-	}
+	return  erreur;
 
+}
+
+void Aprenant::learn2(vector<vector<vector<double>>> parties,vector<double> score){
+	double erreur = 10000;
+//	while (erreur > 0.1 || erreur <(-0.1)){
+		erreur =0;
+		for (unsigned i = 0;i<parties.size();i++){
+			erreur += learn(parties[i],score[i]);
+//		}
+		erreur /= parties.size();
+//		cout << erreur << endl;
+}
 }
 
 double Aprenant::enAvant(vector<double> gameState){
@@ -40,9 +53,11 @@ vector<int> Aprenant::previsionCoup(Game g){
 			vector<int> out;
 			float max = -100000000;
 			int index = 0;
-			int coupChoisis=1;
+			double tmp;
+			int coupChoisis=0;
 			for(it=nextGS.begin();it!=nextGS.end();it++){
-				if (enAvant(*it) > max){
+				enAvant(*it);
+				if (res->getSortie() > max){
 					max = res->getSortie();
 					coupChoisis = index;
 				}
@@ -55,8 +70,8 @@ vector<int> Aprenant::previsionCoup(Game g){
 				out.push_back(2);
 			}
 			out.push_back(coupChoisis/2);
-			//cout << "choix de l'ia : " << out[0] << endl;
-			//cout << "carte : " << out[1] << endl;
+//			cout << "choix de l'ia : " << out[0] << endl;
+//			cout << "carte : " << out[1] << endl;
 			return out;
 }
 

@@ -21,7 +21,8 @@ public :
 	vector<int> previsionCoup(Game g);
 
 	//apprentissage sur une partie enregistrer en binaire
-	void learn(vector<vector<double>>,int target);
+	double learn(vector<vector<double>>,double target);
+	void learn2(vector<vector<vector<double>>>,vector<double> target);
 };
 
 

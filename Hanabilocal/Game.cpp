@@ -50,7 +50,7 @@ Game::Game(int n,int seed){
 	Joueur *louis;
 	Joueur *killianl;
 	Joueur *louisl;
-	Aprenant *ap = new Aprenant({1,80,92});
+	Aprenant *ap = new Aprenant({1,40,92});
 	int max = 0;
 	int y =1;
 	srand(seed);
